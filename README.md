@@ -22,7 +22,7 @@ in submission for [WWcode hackathon for social good 2023](https://hopin.com/even
 - Origin and Destination country-specific
 - Language-specific
 
-### Demo 
+### Try it at 
 [Messenger link to Joyful Helper](https://m.me/106674489205285)
 
 ### Team
