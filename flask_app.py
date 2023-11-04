@@ -50,20 +50,18 @@ def context_length(context):
 def collect_messages(message,moving_context,fixed_context):
     prompt = message
 
-    if len(fixed_context) < 10:
-        fixed_context.append({'role':'user', 'content':f"{prompt}"})
-    else:
-        if (context_length(fixed_context)+context_length(moving_context) > 10000):
-            moving_context.pop(0)
-        moving_context.append({'role':'user', 'content':f"{prompt}"})
-    
+    if (context_length(fixed_context)+context_length(moving_context) > 10000):
+        moving_context.pop(0)
+    moving_context.append({'role':'user', 'content':f"{prompt}"})
+        
     total_context = fixed_context+moving_context
+    print("total_context")
+    print(total_context)
 
     response = get_completion_from_messages(total_context)
-    if len(fixed_context) < 12:
-        fixed_context.append({'role':'assistant', 'content':f"{response}"})
-    else:
-        moving_context.append({'role':'assistant', 'content':f"{response}"})
+    if (context_length(fixed_context)+context_length(moving_context) > 10000):
+        moving_context.pop(0)
+    moving_context.append({'role':'assistant', 'content':f"{response}"})
 
     print(f"fixed_length {context_length(fixed_context)}")
     print(f"moving_length {context_length(moving_context)}")
@@ -96,9 +94,9 @@ class Context(db.Model):
 
 #This is API key for OpenAI
 openai.api_key = os.environ.get("OPENAI_API_KEY")
-# This is page access token from facebook developer console. note - not using developer console anymore but using it as passcode for webhook authentication
+# This is page access token from facebook developer console.
 PAGE_ACCESS_TOKEN = os.environ.get("PAGE_TOKEN")
-# This is API key for facebook messenger. note - not in use anymore
+# This is API key for facebook messenger.
 API="https://graph.facebook.com/v16.0/me/messages?access_token="+PAGE_ACCESS_TOKEN
 # This is the verify token
 
@@ -145,12 +143,13 @@ def fbwebhook():
 
             saved_contexts = db_contexts.contexts.copy()
             print(saved_contexts)
-            if len(saved_contexts) < 10:
+            print(saved_contexts[-1])
+            if len(saved_contexts) < 12:
                 fixed_context = saved_contexts
                 moving_context = []
             else:
-                fixed_context = saved_contexts[0:9]
-                moving_context = saved_contexts[10:]
+                fixed_context = saved_contexts[0:11]
+                moving_context = saved_contexts[11:]
                  
                                   
             # if sender_id not in fixed_contexts:
