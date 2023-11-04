@@ -182,9 +182,6 @@ def fbwebhook():
     
     return '200 OK HTTPS.'
 
-@app.route("/privacy_policy", methods=['GET'])
-def privacypolicy():
-    return render_template('pp.jinja2')
 
   # Run the Flask app
 if __name__ == '__main__':
